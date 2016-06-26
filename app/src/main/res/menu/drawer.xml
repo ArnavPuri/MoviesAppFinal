@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Latest"
+        android:id="@+id/latest_movie_menu"
+        android:icon="@android:drawable/ic_menu_month"/>
+
+    <item android:title="Popular"
+        android:id="@+id/popular_movie_menu"
+        android:icon="@android:drawable/ic_media_rew"/>
+
+    <item android:title="Upcoming"
+        android:id="@+id/nav_item_draft"
+        android:icon="@android:drawable/arrow_down_float"/>
+
+    <item android:title="Settings">
+        <menu>
+            <item
+                android:title="Feedback"
+                android:icon="@android:drawable/ic_menu_send" />
+        </menu>
+    </item>
+</menu>
