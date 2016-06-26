@@ -56,7 +56,7 @@ public class DetailActivity extends AppCompatActivity {
                 Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                     @Override
                     public void onGenerated(Palette palette) {
-                        Palette.Swatch bgSwatch = palette.getDarkMutedSwatch();
+                        Palette.Swatch bgSwatch = palette.getMutedSwatch();
                         Palette.Swatch darkBgSwatch = palette.getDarkMutedSwatch();
 
                         Palette.Swatch vibSwatch = palette.getVibrantSwatch();
@@ -65,25 +65,26 @@ public class DetailActivity extends AppCompatActivity {
                             Toast.makeText(DetailActivity.this, "Empty Swatch bro", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        if (bgSwatch != null && darkBgSwatch != null) {
-                            collapseToolbar.setContentScrimColor(bgSwatch.getRgb());
-                            collapseToolbar.setCollapsedTitleTextColor(darkBgSwatch.getRgb());
-                            titleContainer.setBackgroundColor(bgSwatch.getRgb());
-                            fab.setBackgroundTintList(ColorStateList.valueOf(darkBgSwatch.getRgb()));
-                            overview.setBackgroundColor(darkBgSwatch.getRgb());
-                            // Empty star
-                            Toast.makeText(DetailActivity.this, "BG Swatch bro", Toast.LENGTH_SHORT).show();
-
-                        } else if (vibSwatch != null && darkVibSwatch != null) {
+                        if (vibSwatch != null && darkVibSwatch != null) {
                             collapseToolbar.setContentScrimColor(vibSwatch.getRgb());
-                            collapseToolbar.setCollapsedTitleTextColor(darkVibSwatch.getRgb());
+                            collapseToolbar.setCollapsedTitleTextColor(darkVibSwatch.getTitleTextColor());
                             titleContainer.setBackgroundColor(vibSwatch.getRgb());
                             overview.setBackgroundColor(darkVibSwatch.getRgb());
                             fab.setBackgroundTintList(ColorStateList.valueOf(vibSwatch.getRgb()));
 
                             Toast.makeText(DetailActivity.this, "Vib Swatch bro", Toast.LENGTH_SHORT).show();
 
+                        } else if (bgSwatch != null && darkBgSwatch != null) {
+                            collapseToolbar.setContentScrimColor(bgSwatch.getRgb());
+                            collapseToolbar.setCollapsedTitleTextColor(darkBgSwatch.getTitleTextColor());
+                            titleContainer.setBackgroundColor(bgSwatch.getRgb());
+                            fab.setBackgroundTintList(ColorStateList.valueOf(darkBgSwatch.getRgb()));
+                            overview.setBackgroundColor(darkBgSwatch.getRgb());
+                            // Empty star
+                            Toast.makeText(DetailActivity.this, "BG Swatch bro", Toast.LENGTH_SHORT).show();
+
                         }
+
                     }
                 });
             }
