@@ -41,12 +41,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         holder.movieTitle.setText(movie.getTitle());
         holder.movieStatus.setText(movie.getStatus());
         Picasso.with(c).load(movie.getPosterURL())
-                .resize(600,900)
+                .resize(500,750)
                 .placeholder(c.getResources().getDrawable(R.drawable.placeholder))
                 .into(holder.moviePoster);
     }
 
-
+    
     @Override
     public int getItemCount() {
         return mMovies.size();

@@ -3,18 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
     tools:context="in.teachcoder.moviesappfinal.fragment.SearchFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <EditText
         android:id="@+id/search_movie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:hint="Enter Movie Name" />
+
     <Button
+        android:id="@+id/search_movie_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Search"/>
+        android:layout_gravity="center_horizontal"
+        android:background="@color/colorAccent"
+        android:text="Search" />
 
+    <ProgressBar
+        android:id="@+id/movie_progress"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        style="@style/MyProgressBar"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/search_recycler_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

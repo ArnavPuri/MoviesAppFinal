@@ -51,6 +51,7 @@ public class FetchResults extends AsyncTask<String, Void, ArrayList<MovieItem>> 
     protected void onPreExecute() {
         super.onPreExecute();
         progressBar.setVisibility(View.VISIBLE);
+
     }
 
     @Override
@@ -69,14 +70,28 @@ public class FetchResults extends AsyncTask<String, Void, ArrayList<MovieItem>> 
         final String MOVIE_SEGMENT = "movie";
         final String API_KEY = "9b153f4e40437e115298166e6c1b997c";
         final String API_KEY_PARAM = "api_key";
+        final String SEARCH_PARAM = "query";
         final String DISCOVER = "discover";
+        final String SEARCH = "search";
         final String UPCOMING = "upcoming";
 
-        buildUri = Uri.parse(BASE_URL).buildUpon()
-                .appendPath(DISCOVER)
-                .appendPath(MOVIE_SEGMENT)
-                .appendQueryParameter(API_KEY_PARAM, API_KEY)
-                .build();
+        switch (whichTab){
+            case "Discover":
+                buildUri = Uri.parse(BASE_URL).buildUpon()
+                        .appendPath(DISCOVER)
+                        .appendPath(MOVIE_SEGMENT)
+                        .appendQueryParameter(API_KEY_PARAM, API_KEY)
+                        .build();
+                break;
+            case "Search":
+                buildUri = Uri.parse(BASE_URL).buildUpon()
+                        .appendPath(SEARCH)
+                        .appendPath(MOVIE_SEGMENT)
+                        .appendQueryParameter(API_KEY_PARAM, API_KEY)
+                        .appendQueryParameter(SEARCH_PARAM, searchQuery)
+                        .build();
+        }
+
 
         try {
             url = new URL(buildUri.toString());
@@ -152,12 +167,13 @@ public class FetchResults extends AsyncTask<String, Void, ArrayList<MovieItem>> 
     @Override
     protected void onPostExecute(ArrayList<MovieItem> movieItems) {
         super.onPostExecute(movieItems);
-
         if (movieItems != null){
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
             ListAdapter myAdapter = new ListAdapter(movieItems,context);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(myAdapter);
+            progressBar.setVisibility(View.GONE);
+
         }
     }
 }

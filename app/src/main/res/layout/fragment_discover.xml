@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingTop="4dp"
     tools:context="in.teachcoder.moviesappfinal.fragment.DiscoverFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:layout_marginTop="4dp"
+
         android:id="@+id/recycler_movies"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
