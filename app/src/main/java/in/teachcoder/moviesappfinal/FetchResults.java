@@ -3,7 +3,6 @@ package in.teachcoder.moviesappfinal;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import in.teachcoder.moviesappfinal.adapter.ListAdapter;
 import in.teachcoder.moviesappfinal.model.MovieItem;
 
 /**
@@ -39,7 +39,6 @@ public class FetchResults extends AsyncTask<String, Void, ArrayList<MovieItem>> 
     Context context;
     RecyclerView recyclerView;
     ProgressBar progressBar;
-
     public FetchResults(Context context, RecyclerView rv, ProgressBar bar) {
         super();
         this.context = context;

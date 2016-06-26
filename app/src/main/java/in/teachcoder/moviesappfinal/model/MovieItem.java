@@ -1,9 +1,11 @@
 package in.teachcoder.moviesappfinal.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Arnav on 25-Jun-16.
  */
-public class MovieItem {
+public class MovieItem implements Serializable {
     String title, releaseDate, overview, posterURL, backdropURL, status;
     int id;
     double rating;

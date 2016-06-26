@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import in.teachcoder.moviesappfinal.FetchResults;
 import in.teachcoder.moviesappfinal.R;
@@ -27,7 +30,6 @@ public class DiscoverFragment extends Fragment {
         FetchResults results = new FetchResults(getContext(),recyclerView,progressBar);
         results.execute("Discover", " ");
 
-        // Inflate the layout for this fragment
         return v;
     }
 

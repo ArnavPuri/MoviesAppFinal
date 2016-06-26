@@ -1,4 +1,4 @@
-package in.teachcoder.moviesappfinal;
+package in.teachcoder.moviesappfinal.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

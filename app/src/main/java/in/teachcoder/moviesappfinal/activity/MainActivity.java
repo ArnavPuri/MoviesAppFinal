@@ -1,4 +1,4 @@
-package in.teachcoder.moviesappfinal;
+package in.teachcoder.moviesappfinal.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -7,6 +7,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import in.teachcoder.moviesappfinal.FetchResults;
+import in.teachcoder.moviesappfinal.R;
+import in.teachcoder.moviesappfinal.adapter.ViewPagerAdapter;
 import in.teachcoder.moviesappfinal.fragment.DiscoverFragment;
 import in.teachcoder.moviesappfinal.fragment.SearchFragment;
 
