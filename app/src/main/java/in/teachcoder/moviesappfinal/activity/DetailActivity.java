@@ -43,7 +43,7 @@ public class DetailActivity extends AppCompatActivity {
     MovieItem item;
     int movieId;
     TextView overview, releaseDate, ratingText;
-    ImageView poster;
+    ImageView poster, backdrop;
     RatingBar rating;
     CollapsingToolbarLayout collapseToolbar;
     Toolbar toolbar;
@@ -63,7 +63,7 @@ public class DetailActivity extends AppCompatActivity {
         overview.setText(item.getOverview());
 //        movieTitle.setText(item.getTitle());
         releaseDate.setText(item.getReleaseDate());
-        ratingText.setText(item.getRating() + "/10");
+        ratingText.setText(item.getRating()+"");
         setSupportActionBar(toolbar);
         toolbar.setTitle(item.getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -72,7 +72,7 @@ public class DetailActivity extends AppCompatActivity {
         Target myTarget = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                poster.setImageBitmap(bitmap);
+                backdrop.setImageBitmap(bitmap);
                 Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                     @Override
                     public void onGenerated(Palette palette) {
@@ -126,14 +126,21 @@ public class DetailActivity extends AppCompatActivity {
             }
         };
 
-        Picasso.with(this).load(item.getPosterURL())
-                .resize(300, 450)
+        Picasso.with(this).load(item.getBackdropURL())
+                .resize(640, 360)
                 .into(myTarget);
+
+        Picasso.with(this).load(item.getPosterURL())
+                .resize(120, 180)
+                .into(poster);
+
+
     }
 
     public void initializeViews() {
         titleContainer = (LinearLayout) findViewById(R.id.title_container);
         poster = (ImageView) findViewById(R.id.movie_poster);
+        backdrop= (ImageView) findViewById(R.id.movie_backdrop);
         overview = (TextView) findViewById(R.id.movie_overview);
         rating = (RatingBar) findViewById(R.id.movie_rating);
         collapseToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);

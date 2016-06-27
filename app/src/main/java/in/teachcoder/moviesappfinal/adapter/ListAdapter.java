@@ -1,7 +1,10 @@
 package in.teachcoder.moviesappfinal.adapter;
 
+import android.annotation.TargetApi;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -71,15 +74,18 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             v.setOnClickListener(this);
         }
 
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onClick(View view) {
             MovieItem clickedItem = mMovies.get(getAdapterPosition());
             Intent i = new Intent(c, DetailActivity.class);
+                ActivityOptions options = ActivityOptions.makeScaleUpAnimation(view, 0,0, view.getWidth(),view.getHeight());
+
             Bundle bundle = new Bundle();
             bundle.putSerializable("clicked_item",clickedItem);
             i.putExtras(bundle);
             i.putExtra("movie_id",clickedItem.getId());
-            c.startActivity(i);
+            c.startActivity(i, options.toBundle());
             Log.d("ListAdapter", getAdapterPosition() + " ");
         }
     }
