@@ -91,7 +91,6 @@ public class FetchResults extends AsyncTask<String, Void, ArrayList<MovieItem>> 
                         .build();
         }
 
-
         try {
             url = new URL(buildUri.toString());
         } catch (MalformedURLException e) {

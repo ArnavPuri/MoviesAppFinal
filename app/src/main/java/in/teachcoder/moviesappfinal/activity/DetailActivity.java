@@ -1,5 +1,6 @@
 package in.teachcoder.moviesappfinal.activity;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -7,10 +8,13 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -46,11 +50,15 @@ public class DetailActivity extends AppCompatActivity {
     ImageView poster, backdrop;
     RatingBar rating;
     CollapsingToolbarLayout collapseToolbar;
+    boolean flag = true;
     Toolbar toolbar;
     LinearLayout titleContainer;
+    CardView overviewCard;
     FloatingActionButton fab;
+    CoordinatorLayout.Behavior<ImageView> behaviour;
     AsyncTask<String, Void, ArrayList<MovieTrailer>> trailerTask;
 
+    //    Animation scaleUp, scaleDown;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,17 +66,150 @@ public class DetailActivity extends AppCompatActivity {
         item = (MovieItem) getIntent().getExtras().getSerializable("clicked_item");
         initializeViews();
         final ArrayList<MovieTrailer> trailers = trailerFetch(item.getId());
+        //      scaleUp = AnimationUtils.loadAnimation(this,R.anim.scale_up);
+        //      scaleDown = AnimationUtils.loadAnimation(this,R.anim.scale_down);
+        behaviour = new CoordinatorLayout.Behavior<ImageView>() {
 
+            @Override
+            public boolean layoutDependsOn(CoordinatorLayout parent,
+                                           ImageView child, View dependency) {
+                return dependency instanceof AppBarLayout;
+            }
+
+            @Override
+            public boolean onDependentViewChanged(CoordinatorLayout parent, final ImageView child, View dependency) {
+//                child.setY(dependency.getBottom() - 120);
+                Log.d("Dependency", dependency.getBottom() + " | " + dependency.getY() + " | " + child.getY());
+                if (dependency.getBottom() <= 300 && flag) {
+                    rating.animate()
+                            .scaleY(1.0f)
+                            .scaleX(1.0f)
+                            .setDuration(400)
+                            .setListener(new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    rating.setVisibility(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    flag = true;
+                                }
+
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {
+
+                                }
+                            });
+                    child.animate()
+                            .scaleY(0.0f)
+                            .scaleX(0.0f)
+                            .setDuration(600)
+                            .setListener(new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    child.setVisibility(View.GONE);
+                                    flag = false;
+                                }
+
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {
+
+                                }
+                            });
+                } else if (!flag && dependency.getBottom() > 300) {
+// Part you requirechild.animate()
+                    rating.animate()
+                            .scaleY(0.0f)
+                            .scaleX(0.0f)
+                            .setDuration(600)
+                            .setListener(new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    rating.setVisibility(View.INVISIBLE);
+
+                                }
+
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {
+
+                                }
+                            });
+                    child.animate()
+                            .scaleY(1.0f)
+                            .scaleX(1.0f)
+                            .setDuration(400)
+                            .setListener(new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    child.setVisibility(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    flag = true;
+                                }
+
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {
+
+                                }
+                            });
+
+                }
+                return true;
+            }
+
+
+        };
+
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) poster.getLayoutParams();
+        params.setBehavior(behaviour);
         rating.setRating((float) item.getRating());
         overview.setText(item.getOverview());
+        collapseToolbar.setTitle(" ");
+        toolbar.setTitle(item.getTitle());
 //        movieTitle.setText(item.getTitle());
         releaseDate.setText(item.getReleaseDate());
-        ratingText.setText(item.getRating()+"");
+        ratingText.setText(item.getRating() + "");
         setSupportActionBar(toolbar);
-        toolbar.setTitle(item.getTitle());
+        getSupportActionBar().setTitle(item.getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(item.getTitle());
         //Palette code
+        Picasso.with(this).load(item.getBackdropURL())
+                .resize(640, 360)
+                .into(backdrop);
         Target myTarget = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -89,7 +230,7 @@ public class DetailActivity extends AppCompatActivity {
                             collapseToolbar.setContentScrimColor(vibSwatch.getRgb());
                             collapseToolbar.setCollapsedTitleTextColor(darkVibSwatch.getTitleTextColor());
                             titleContainer.setBackgroundColor(vibSwatch.getRgb());
-                            overview.setBackgroundColor(darkVibSwatch.getRgb());
+                            overviewCard.setCardBackgroundColor(darkVibSwatch.getRgb());
                             fab.setBackgroundTintList(ColorStateList.valueOf(vibSwatch.getRgb()));
 
                             Toast.makeText(DetailActivity.this, "Vib Swatch bro", Toast.LENGTH_SHORT).show();
@@ -99,22 +240,13 @@ public class DetailActivity extends AppCompatActivity {
                             collapseToolbar.setCollapsedTitleTextColor(darkBgSwatch.getTitleTextColor());
                             titleContainer.setBackgroundColor(bgSwatch.getRgb());
                             fab.setBackgroundTintList(ColorStateList.valueOf(darkBgSwatch.getRgb()));
-                            overview.setBackgroundColor(darkBgSwatch.getRgb());
+                            overviewCard.setCardBackgroundColor(darkBgSwatch.getRgb());
                             // Empty star
                             Toast.makeText(DetailActivity.this, "BG Swatch bro", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-                //fab clicklistener
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent i = new Intent(DetailActivity.this, TrailerActivity.class);
-                        i.putExtra("trailerKey", trailers.get(0).getTrailerUrl());
-                        Log.d("trailerFetch", trailers.get(0).getTrailerUrl());
-                        startActivity(i);
-                    }
-                });
+
             }
 
             @Override
@@ -125,7 +257,15 @@ public class DetailActivity extends AppCompatActivity {
             public void onPrepareLoad(Drawable placeHolderDrawable) {
             }
         };
-
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DetailActivity.this, TrailerActivity.class);
+                i.putExtra("trailerKey", trailers.get(0).getTrailerUrl());
+                Log.d("trailerFetch", trailers.get(0).getTrailerUrl());
+                startActivity(i);
+            }
+        });
         Picasso.with(this).load(item.getBackdropURL())
                 .resize(640, 360)
                 .into(myTarget);
@@ -140,7 +280,7 @@ public class DetailActivity extends AppCompatActivity {
     public void initializeViews() {
         titleContainer = (LinearLayout) findViewById(R.id.title_container);
         poster = (ImageView) findViewById(R.id.movie_poster);
-        backdrop= (ImageView) findViewById(R.id.movie_backdrop);
+        backdrop = (ImageView) findViewById(R.id.movie_backdrop);
         overview = (TextView) findViewById(R.id.movie_overview);
         rating = (RatingBar) findViewById(R.id.movie_rating);
         collapseToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
@@ -148,6 +288,7 @@ public class DetailActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         ratingText = (TextView) findViewById(R.id.movie_rating_text);
+        overviewCard = (CardView) findViewById(R.id.overview_card);
     }
 
     public ArrayList<MovieTrailer> trailerFetch(final int id) {
@@ -216,6 +357,23 @@ public class DetailActivity extends AppCompatActivity {
 
         return trailers;
     }
+
+//    private boolean updatePosterVisibility(CoordinatorLayout parent,
+//                                           AppBarLayout appBarLayout,
+//                                           ImageView posterChild){
+//        final CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) posterChild.getLayoutParams();
+//        Rect mTmpRect = new Rect();
+//
+//
+//        final Rect rect = mTmpRect;
+//        if (rect.bottom <= appBarLayout.getMinimumHeightForVisibleOverlappingContent()) {
+//            // If the anchor's bottom is below the seam, we'll animate our FAB out
+//            posterChild.setVisibility(View.GONE);
+//        } else {
+//            // Else, we'll animate our FAB back in
+//            posterChild.setVisibility(View.VISIBLE);
+//        }
+//    }
 
 
 }
