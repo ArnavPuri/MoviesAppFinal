@@ -20,7 +20,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -67,20 +66,15 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         item = (MovieItem) getIntent().getExtras().getSerializable("clicked_item");
         initializeViews();
+
+
         poster.postDelayed(new Runnable() {
             @Override
             public void run() {
                 poster.setVisibility(View.VISIBLE);
             }
         }, 600);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            Slide slide = new Slide(Gravity.BOTTOM);
-//            slide.addTarget(R.id.overview_card);
-//            slide.setInterpolator(AnimationUtils.loadInterpolator(this,
-//                    android.R.interpolator.linear_out_slow_in));
-//            slide.setDuration(600);
-//            getWindow().setEnterTransition(slide);
-//        }
+
         final ArrayList<MovieTrailer> trailers = trailerFetch(item.getId());
         behaviour = new CoordinatorLayout.Behavior<ImageView>() {
 

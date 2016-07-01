@@ -65,8 +65,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         TextView movieTitle;
         TextView movieStatus;
         ImageView moviePoster;
-
-
         public ViewHolder(View v) {
             super(v);
             this.movieTitle = (TextView) v.findViewById(R.id.movie_title);
@@ -74,7 +72,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             this.moviePoster = (ImageView) v.findViewById(R.id.movie_poster);
             v.setOnClickListener(this);
         }
-
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onClick(View view) {

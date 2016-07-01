@@ -89,6 +89,14 @@ public class FetchResults extends AsyncTask<String, Void, ArrayList<MovieItem>> 
                         .appendQueryParameter(API_KEY_PARAM, API_KEY)
                         .appendQueryParameter(SEARCH_PARAM, searchQuery)
                         .build();
+                break;
+            case "Popular":
+                buildUri = Uri.parse(BASE_URL).buildUpon()
+                        .appendPath(MOVIE_SEGMENT)
+                        .appendPath(UPCOMING)
+                        .appendQueryParameter(API_KEY_PARAM, API_KEY)
+                        .build();
+                break;
         }
 
         try {
