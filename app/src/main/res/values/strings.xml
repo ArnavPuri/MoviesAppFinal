@@ -2,7 +2,5 @@
     <string name="app_name">MoviesAppFinal</string>
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_closed">Drawer Closed</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="shared_view_transition_name">myTransition</string>
 </resources>

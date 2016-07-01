@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -18,11 +19,12 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -65,9 +67,21 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         item = (MovieItem) getIntent().getExtras().getSerializable("clicked_item");
         initializeViews();
+        poster.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                poster.setVisibility(View.VISIBLE);
+            }
+        }, 600);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            Slide slide = new Slide(Gravity.BOTTOM);
+//            slide.addTarget(R.id.overview_card);
+//            slide.setInterpolator(AnimationUtils.loadInterpolator(this,
+//                    android.R.interpolator.linear_out_slow_in));
+//            slide.setDuration(600);
+//            getWindow().setEnterTransition(slide);
+//        }
         final ArrayList<MovieTrailer> trailers = trailerFetch(item.getId());
-        //      scaleUp = AnimationUtils.loadAnimation(this,R.anim.scale_up);
-        //      scaleDown = AnimationUtils.loadAnimation(this,R.anim.scale_down);
         behaviour = new CoordinatorLayout.Behavior<ImageView>() {
 
             @Override
@@ -206,10 +220,7 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(item.getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(item.getTitle());
-        //Palette code
-        Picasso.with(this).load(item.getBackdropURL())
-                .resize(640, 360)
-                .into(backdrop);
+
         Target myTarget = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -223,26 +234,13 @@ public class DetailActivity extends AppCompatActivity {
                         Palette.Swatch vibSwatch = palette.getVibrantSwatch();
                         Palette.Swatch darkVibSwatch = palette.getDarkVibrantSwatch();
                         if (bgSwatch == null && vibSwatch == null) {
-                            Toast.makeText(DetailActivity.this, "Empty Swatch bro", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         if (vibSwatch != null && darkVibSwatch != null) {
-                            collapseToolbar.setContentScrimColor(vibSwatch.getRgb());
-                            collapseToolbar.setCollapsedTitleTextColor(darkVibSwatch.getTitleTextColor());
-                            titleContainer.setBackgroundColor(vibSwatch.getRgb());
-                            overviewCard.setCardBackgroundColor(darkVibSwatch.getRgb());
-                            fab.setBackgroundTintList(ColorStateList.valueOf(vibSwatch.getRgb()));
-
-                            Toast.makeText(DetailActivity.this, "Vib Swatch bro", Toast.LENGTH_SHORT).show();
+                            setColors(vibSwatch, darkVibSwatch);
 
                         } else if (bgSwatch != null && darkBgSwatch != null) {
-                            collapseToolbar.setContentScrimColor(bgSwatch.getRgb());
-                            collapseToolbar.setCollapsedTitleTextColor(darkBgSwatch.getTitleTextColor());
-                            titleContainer.setBackgroundColor(bgSwatch.getRgb());
-                            fab.setBackgroundTintList(ColorStateList.valueOf(darkBgSwatch.getRgb()));
-                            overviewCard.setCardBackgroundColor(darkBgSwatch.getRgb());
-                            // Empty star
-                            Toast.makeText(DetailActivity.this, "BG Swatch bro", Toast.LENGTH_SHORT).show();
+                            setColors(bgSwatch, darkBgSwatch);
                         }
                     }
                 });
@@ -291,12 +289,25 @@ public class DetailActivity extends AppCompatActivity {
         overviewCard = (CardView) findViewById(R.id.overview_card);
     }
 
+    public void setColors(Palette.Swatch light, Palette.Swatch dark) {
+        collapseToolbar.setContentScrimColor(light.getRgb());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.setStatusBarColor(dark.getRgb());
+        }
+        collapseToolbar.setCollapsedTitleTextColor(dark.getTitleTextColor());
+        titleContainer.setBackgroundColor(light.getRgb());
+        overviewCard.setCardBackgroundColor(dark.getRgb());
+        fab.setBackgroundTintList(ColorStateList.valueOf(light.getRgb()));
+        ratingText.setTextColor(dark.getRgb());
+        releaseDate.setTextColor(dark.getRgb());
+    }
+
     public ArrayList<MovieTrailer> trailerFetch(final int id) {
         final ArrayList<MovieTrailer> trailers = new ArrayList<>();
         trailerTask = new AsyncTask<String, Void, ArrayList<MovieTrailer>>() {
             URL url;
             Uri buildUri;
-
 
             @Override
             protected ArrayList<MovieTrailer> doInBackground(String... strings) {
@@ -357,23 +368,5 @@ public class DetailActivity extends AppCompatActivity {
 
         return trailers;
     }
-
-//    private boolean updatePosterVisibility(CoordinatorLayout parent,
-//                                           AppBarLayout appBarLayout,
-//                                           ImageView posterChild){
-//        final CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) posterChild.getLayoutParams();
-//        Rect mTmpRect = new Rect();
-//
-//
-//        final Rect rect = mTmpRect;
-//        if (rect.bottom <= appBarLayout.getMinimumHeightForVisibleOverlappingContent()) {
-//            // If the anchor's bottom is below the seam, we'll animate our FAB out
-//            posterChild.setVisibility(View.GONE);
-//        } else {
-//            // Else, we'll animate our FAB back in
-//            posterChild.setVisibility(View.VISIBLE);
-//        }
-//    }
-
 
 }

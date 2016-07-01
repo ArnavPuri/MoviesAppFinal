@@ -1,6 +1,7 @@
 package in.teachcoder.moviesappfinal.adapter;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
@@ -48,8 +49,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         MovieItem movie = mMovies.get(position);
         holder.movieTitle.setText(movie.getTitle());
         holder.movieStatus.setText(movie.getStatus());
-        Picasso.with(c).load(movie.getPosterURL())
-                .resize(500, 750)
+        Picasso.with(c).load(movie.getBackdropURL())
+                .resize(640, 360)
                 .placeholder(c.getResources().getDrawable(R.drawable.placeholder))
                 .into(holder.moviePoster);
     }
@@ -79,12 +80,23 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         public void onClick(View view) {
             MovieItem clickedItem = mMovies.get(getAdapterPosition());
             Intent i = new Intent(c, DetailActivity.class);
-                ActivityOptions options = ActivityOptions.makeScaleUpAnimation(view, 0,0, view.getWidth(),view.getHeight());
+            ActivityOptions options = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                options = ActivityOptions
+                        .makeSceneTransitionAnimation((Activity) c, view.findViewById(R.id.movie_poster),
+                                view.findViewById(R.id.movie_poster).getTransitionName());
+            }else{
+                options = ActivityOptions.makeScaleUpAnimation(view,
+                        0,
+                        0,
+                        view.getWidth(),
+                        view.getHeight());
+            }
 
             Bundle bundle = new Bundle();
-            bundle.putSerializable("clicked_item",clickedItem);
+            bundle.putSerializable("clicked_item", clickedItem);
             i.putExtras(bundle);
-            i.putExtra("movie_id",clickedItem.getId());
+            i.putExtra("movie_id", clickedItem.getId());
             c.startActivity(i, options.toBundle());
             Log.d("ListAdapter", getAdapterPosition() + " ");
         }
